@@ -2,4 +2,6 @@
 # imported by Alembic
 from app.db.base_class import Base  # noqa
 from app.models.item import Item  # noqa
+from app.models.order import Order  # noqa
+from app.models.shipping_address import ShippingAddress  # noqa
 from app.models.user import User  # noqa

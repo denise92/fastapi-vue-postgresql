@@ -1,0 +1,17 @@
+export default {
+  createTitle: "Create User",
+  manageTitle: "User Management",
+  fullName: "Full Name",
+  password: "Password",
+  passwordOptional: "Password (optional)",
+  create: "Create",
+  active: "Active",
+  superuser: "Superuser",
+  actions: "Actions",
+  edit: "Edit",
+  editTitle: "Edit User",
+  requiredEmail: "Please enter email",
+  requiredPassword: "Please enter password",
+  yes: "Yes",
+  no: "No",
+} as const;

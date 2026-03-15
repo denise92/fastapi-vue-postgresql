@@ -1,0 +1,17 @@
+export default {
+  createTitle: "新增使用者",
+  manageTitle: "使用者管理",
+  fullName: "姓名",
+  password: "密碼",
+  passwordOptional: "密碼（選填）",
+  create: "新增",
+  active: "啟用",
+  superuser: "管理員",
+  actions: "操作",
+  edit: "編輯",
+  editTitle: "編輯使用者",
+  requiredEmail: "請輸入 Email",
+  requiredPassword: "請輸入密碼",
+  yes: "是",
+  no: "否",
+} as const;

@@ -1,0 +1,43 @@
+from typing import List
+
+from fastapi.encoders import jsonable_encoder
+from sqlalchemy.orm import Session
+
+from app.crud.base import CRUDBase
+from app.models.shipping_address import ShippingAddress
+from app.schemas.shipping_address import ShippingAddressCreate, ShippingAddressUpdate
+
+
+class CRUDShippingAddress(CRUDBase[ShippingAddress, ShippingAddressCreate, ShippingAddressUpdate]):
+    def create_with_user(
+        self, db: Session, *, obj_in: ShippingAddressCreate, user_id: int
+    ) -> ShippingAddress:
+        obj_in_data = jsonable_encoder(obj_in)
+        db_obj = self.model(**obj_in_data, user_id=user_id)
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+
+    def get_multi_by_user(
+        self, db: Session, *, user_id: int, skip: int = 0, limit: int = 100
+    ) -> List[ShippingAddress]:
+        return (
+            db.query(self.model)
+            .filter(ShippingAddress.user_id == user_id)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
+    def get_by_user(
+        self, db: Session, *, id: int, user_id: int
+    ) -> ShippingAddress | None:
+        return (
+            db.query(self.model)
+            .filter(ShippingAddress.id == id, ShippingAddress.user_id == user_id)
+            .first()
+        )
+
+
+shipping_address = CRUDShippingAddress(ShippingAddress)

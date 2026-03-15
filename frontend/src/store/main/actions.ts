@@ -1,9 +1,9 @@
 import { api } from '@/api';
-import router from '@/router';
+import { IUserProfileUpdate } from '@/interfaces';
+import { getCurrentPath, navigateTo } from '@/services/navigation';
 import { getLocalToken, removeLocalToken, saveLocalToken } from '@/utils';
-import { AxiosError } from 'axios';
+import { AxiosError, isAxiosError } from 'axios';
 import { getStoreAccessors } from 'typesafe-vuex';
-import { ActionContext } from 'vuex';
 import { State } from '../state';
 import {
     commitAddNotification,
@@ -15,7 +15,20 @@ import {
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
-type MainContext = ActionContext<MainState, State>;
+type MainContext = {
+    state: MainState;
+    rootState: State;
+    commit: (...args: unknown[]) => unknown;
+    dispatch: (...args: unknown[]) => Promise<unknown>;
+    getters: Record<string, unknown>;
+    rootGetters: Record<string, unknown>;
+};
+
+async function handleApiError(context: MainContext, error: unknown) {
+    if (isAxiosError(error)) {
+        await dispatchCheckApiError(context, error);
+    }
+}
 
 export const actions = {
     async actionLogIn(context: MainContext, payload: { username: string; password: string }) {
@@ -45,22 +58,22 @@ export const actions = {
                 commitSetUserProfile(context, response.data);
             }
         } catch (error) {
-            await dispatchCheckApiError(context, error);
+            await handleApiError(context, error);
         }
     },
-    async actionUpdateUserProfile(context: MainContext, payload) {
+    async actionUpdateUserProfile(context: MainContext, payload: IUserProfileUpdate) {
         try {
             const loadingNotification = { content: 'saving', showProgress: true };
             commitAddNotification(context, loadingNotification);
             const response = (await Promise.all([
                 api.updateMe(context.state.token, payload),
-                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+                new Promise<void>((resolve) => setTimeout(resolve, 500)),
             ]))[0];
             commitSetUserProfile(context, response.data);
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Profile successfully updated', color: 'success' });
         } catch (error) {
-            await dispatchCheckApiError(context, error);
+            await handleApiError(context, error);
         }
     },
     async actionCheckLoggedIn(context: MainContext) {
@@ -99,9 +112,9 @@ export const actions = {
         await dispatchLogOut(context);
         commitAddNotification(context, { content: 'Logged out', color: 'success' });
     },
-    actionRouteLogOut(context: MainContext) {
-        if (router.currentRoute.path !== '/login') {
-            router.push('/login');
+    async actionRouteLogOut(context: MainContext) {
+        if (getCurrentPath() !== '/app/login') {
+            await navigateTo('/app/login');
         }
     },
     async actionCheckApiError(context: MainContext, payload: AxiosError) {
@@ -109,9 +122,10 @@ export const actions = {
             await dispatchLogOut(context);
         }
     },
-    actionRouteLoggedIn(context: MainContext) {
-        if (router.currentRoute.path === '/login' || router.currentRoute.path === '/') {
-            router.push('/main');
+    async actionRouteLoggedIn(context: MainContext) {
+        const currentPath = getCurrentPath();
+        if (currentPath === '/app/login' || currentPath === '/') {
+            await navigateTo('/app/dashboard');
         }
     },
     async removeNotification(context: MainContext, payload: { notification: AppNotification, timeout: number }) {
@@ -128,7 +142,7 @@ export const actions = {
             commitAddNotification(context, loadingNotification);
             const response = (await Promise.all([
                 api.passwordRecovery(payload.username),
-                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+                new Promise<void>((resolve) => setTimeout(resolve, 500)),
             ]))[0];
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Password recovery email sent', color: 'success' });
@@ -144,7 +158,7 @@ export const actions = {
             commitAddNotification(context, loadingNotification);
             const response = (await Promise.all([
                 api.resetPassword(payload.password, payload.token),
-                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+                new Promise<void>((resolve) => setTimeout(resolve, 500)),
             ]))[0];
             commitRemoveNotification(context, loadingNotification);
             commitAddNotification(context, { content: 'Password successfully reset', color: 'success' });

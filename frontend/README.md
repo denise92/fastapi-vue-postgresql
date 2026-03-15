@@ -1,31 +1,57 @@
 # frontend
 
-## Project setup
-```
-npm install
+Vue 3 + Vite + Vite SSG frontend.
+
+## Requirements
+
+- Node.js 20.x
+- Yarn 1.x
+- Tailwind CSS 4.x
+
+If you use `nvm`, run:
+
+```bash
+nvm use 20
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+## Install
+
+```bash
+yarn install
 ```
 
-### Compiles and minifies for production
-```
-npm run build
+## Local development
+
+```bash
+yarn dev
 ```
 
-### Run your tests
-```
-npm run test
+## Build (SPA)
+
+```bash
+yarn build
 ```
 
-### Lints and fixes files
-```
-npm run lint
+## Build (SSG)
+
+```bash
+yarn build:ssg
 ```
 
-### Run your unit tests
+## Preview
+
+```bash
+yarn preview
 ```
-npm run test:unit
+
+## Generate API client (Hey API)
+
+```bash
+yarn api:generate
 ```
+
+By default it reads `http://127.0.0.1:8000/api/v1/openapi.json` from `openapi-ts.config.ts` and writes generated files to `src/client`.
+
+## i18n
+
+The app uses `vue-i18n` with a global instance in `src/i18n/index.ts` (default locale: `zh-TW`, fallback: `en`).

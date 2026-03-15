@@ -8,7 +8,8 @@
 
 ## Frontend Requirements
 
-* Node.js (with `npm`).
+* Node.js 20.x (with `yarn`).
+* Tailwind CSS 4.x (configured in the frontend toolchain).
 
 ## Backend local development
 
@@ -378,12 +379,12 @@ and check all the corresponding available URLs in the section at the end.
 
 ## Frontend development
 
-* Enter the `frontend` directory, install the NPM packages and start the live server using the `npm` scripts:
+* Enter the `frontend` directory, install packages and start the live server using `yarn`:
 
 ```bash
 cd frontend
-npm install
-npm run serve
+yarn install
+yarn dev
 ```
 
 Then open your browser at http://localhost:8080

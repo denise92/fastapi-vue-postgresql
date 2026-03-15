@@ -1,4 +1,6 @@
 from .crud_item import item
+from .crud_order import order
+from .crud_shipping_address import shipping_address
 from .crud_user import user
 
 # For a new basic set of CRUD operations you could just do

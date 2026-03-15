@@ -1,0 +1,33 @@
+export default {
+  login: {
+    title: "登入",
+    email: "Email",
+    password: "密碼",
+    submit: "登入",
+    requiredUsername: "請輸入帳號",
+    requiredPassword: "請輸入密碼",
+    failed: "登入失敗，請確認帳號密碼",
+    forgotPassword: "忘記密碼？",
+  },
+  forgotPassword: {
+    title: "忘記密碼",
+    description: "輸入註冊的 Email，我們將寄送重設密碼連結給您。",
+    email: "Email",
+    submit: "寄送重設連結",
+    success: "重設密碼信件已寄出，請檢查您的信箱。",
+    backToLogin: "返回登入",
+    requiredEmail: "請輸入 Email",
+  },
+  resetPassword: {
+    title: "重設密碼",
+    description: "請輸入新密碼",
+    password: "新密碼",
+    confirmPassword: "確認密碼",
+    submit: "重設密碼",
+    success: "密碼已更新，請使用新密碼登入。",
+    backToLogin: "返回登入",
+    requiredPassword: "請輸入新密碼",
+    passwordMismatch: "兩次輸入的密碼不一致",
+    invalidToken: "連結已失效，請重新申請重設密碼。",
+  },
+} as const;
